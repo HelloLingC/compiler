@@ -6,7 +6,7 @@
 
 static void usage(char *prog)
 {
-    fprintf(stderr, "Usage: %s infile\n", prog);
+    fprintf(stderr, "Usage: %s <FilePath>\n", prog);
     exit(0);
 }
 
@@ -21,7 +21,7 @@ static void scan_file()
     struct token T;
     while (scan(&T))
     {
-        printf("Find A token\n");
+        fprintf(stdout, "Find A token: \n", T.token);
     }
 }
 
@@ -32,12 +32,15 @@ void main(int argc, char *argv[])
         usage(argv[0]);
     }
     init();
-    printf("A compiler written by C");
-    if ((Infile = fopen(argv[1], "r")) == NULL)
+    printf("A compiler written by C\n");
+    if ((Infile  = fopen(argv[1], "r")) == NULL)
     {
         fprintf(stderr, "Unable to open file %s\n", argv[1]);
         exit(0);
     }
-    scan_file();
+    struct ASTnode *n;
+    scan(&Token);
+    n = binexpr(0);
+    printf("interp: %d\n", interpretTree(n));
     exit(0);
 }

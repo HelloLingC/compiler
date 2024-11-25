@@ -1,3 +1,3 @@
-# A Compiler
+# Compiler
 
 A compiler written by C

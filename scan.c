@@ -6,19 +6,17 @@
  * @brief Get the position of a char in a string
  *
  * @return int
- */`
-{
+ */
+static int chrpos(char *s, int c) {
     char *p;
     p = strchr(s, c);
     return (p ? p - s : -1);
 }
 
-static int next(void)
-{
+static int next(void) {
     int c;
     // If Putback exists, use Putback instead of getting next c in input
-    if (Putback)
-    {
+    if (Putback) {
         c = Putback;
         Putback = 0;
         return c;
@@ -29,18 +27,14 @@ static int next(void)
     return c;
 }
 
-// 
-static void putback(int c) {
-    Putback = c;
-}
+//
+static void putback(int c) { Putback = c; }
 
 // Skip whitespace, newline, etc
-static int skip(void)
-{
+static int skip(void) {
     int c;
     c = next();
-    while (' ' == c || '\n' == c || '\r' == c)
-    {
+    while (' ' == c || '\n' == c || '\r' == c || '\t' == c) {
         c = next();
     }
     return c;
@@ -48,12 +42,12 @@ static int skip(void)
 
 /**
  * @brief Scan from a vaild digit char return the integer literal
- * 
- * @return char* 
+ *
+ * @return int the integer literal
  */
-static char* scan_int(int c) {
+static int scan_int(int c) {
     int k, val = 0;
-    while((k = charpos("0123456789", c)) >= 0) {
+    while ((k = chrpos("0123456789", c)) >= 0) {
         val = val * 10 + k;
         c = next();
     }
@@ -67,14 +61,13 @@ static char* scan_int(int c) {
  *
  * @return int 0 or 1 which means whether the next token is vaild
  */
-int scan(struct token *t)
-{
+int scan(struct token *t) {
     int c;
     // Go the next
     c = skip();
-    switch (c)
-    {
+    switch (c) {
     case EOF:
+        t->token = T_EOF;
         return 0;
     case '+':
         t->token = T_PLUS;
@@ -89,7 +82,7 @@ int scan(struct token *t)
         t->token = T_SLASH;
         break;
     default:
-        if(isdigit(c)) {
+        if (isdigit(c)) {
             // A vaild digit
             t->token = T_INTLIT;
             t->intv = scan_int(c);
